@@ -18,8 +18,13 @@ Havenly/
 │
 ├── src/                    # Source code for the project
 ├── docs/                   # WorkShops and other documents
-│   └── Worshop-1, Business-Canvas-Model, Requirements, etc.
-│
+│   └── Worshop-1/
+│       ├── Business Canva Model
+│       ├── Requirements
+│       ├── User Stories
+│       ├── Initial Database Architecture
+│       ├── WorkShop-1
+│       ├── README.md
 ├── README.md               # Full documentation and instructions
 ├── .gitignore              # Files/folders excluded from Git tracking
 └── LICENSE                 

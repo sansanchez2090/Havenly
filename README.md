@@ -10,3 +10,17 @@ Universidad Distrital Francisco José de Caldas
 Havenly is a web-based property management and booking system inspired by Airbnb.  
 The platform allows users to search for properties using map-based filters (location, price, amenities),  
 book stays securely, and leave reviews.  
+
+## 🗂️ Repository Structure
+
+```
+Havenly/
+│
+├── src/                    # Source code for the compiler
+├── docs/                   # WorkShops and other documents
+│   └── Worshop-1, Business-Canvas-Model, Requirements, etc.
+│
+├── README.md               # Full documentation and instructions
+├── .gitignore              # Files/folders excluded from Git tracking
+└── LICENSE                 
+```

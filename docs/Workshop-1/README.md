@@ -7,7 +7,7 @@ Universidad Distrital Francisco José de Caldas
 ## 📌 Overview
 This document contains the deliverables for **Workshop 1** of the Databases II course.  
 The goal of this workshop is to define the business model, requirements, user context,  
-and initial database architecture for our project: **MapNest**, an Airbnb-like property  
+and initial database architecture for our project: **Havenly**, an Airbnb-like property  
 management and booking platform with map-based search.  
 
 ---

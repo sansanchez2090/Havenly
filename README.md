@@ -16,7 +16,7 @@ book stays securely, and leave reviews.
 ```
 Havenly/
 │
-├── src/                    # Source code for the compiler
+├── src/                    # Source code for the project
 ├── docs/                   # WorkShops and other documents
 │   └── Worshop-1, Business-Canvas-Model, Requirements, etc.
 │

@@ -18,7 +18,7 @@ book stays securely, and leave reviews.
 ## Table of Contents
 
 - [Documentation](./docs)
-  - [Workshop 1](./docs/Workshop-1)
+  - [Workshop 1](./docs/Workshop-1/workshop1.pdf)
 
 ## 🗂️ Repository Structure
 

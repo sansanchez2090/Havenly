@@ -18,7 +18,7 @@ book stays securely, and leave reviews.
 ## Table of Contents
 
 - [Documentation](./docs)
-  - [Workshop 1](./docs/Worshop-1)
+  - [Workshop 1](./docs/Workshop-1)
 
 ## 🗂️ Repository Structure
 
@@ -27,7 +27,7 @@ Havenly/
 │
 ├── src/                    # Source code for the project
 ├── docs/                   # WorkShops and other documents
-│   └── Worshop-1/
+│   └── Workshop-1/
 │       ├── Business Canva Model.pdf
 │       ├── Requirements.pdf
 │       ├── User Stories.pdf

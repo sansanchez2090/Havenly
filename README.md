@@ -28,10 +28,6 @@ Havenly/
 ├── src/                    # Source code for the project
 ├── docs/                   # WorkShops and other documents
 │   └── Workshop-1/
-│       ├── Business Canva Model.pdf
-│       ├── Requirements.pdf
-│       ├── User Stories.pdf
-│       ├── Initial Database Architecture.pdf
 │       ├── WorkShop-1.pdf
 │       ├── README.md
 ├── README.md               # Full documentation and instructions

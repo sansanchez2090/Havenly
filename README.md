@@ -9,6 +9,7 @@ Universidad Distrital Francisco José de Caldas
 ## 👥 Team Members
 - Santiago Sanchez Moya - 20211020032
 - Juan Daniel Rodriguez Hurtado – 20211020152
+- Faider Camilo Trujillo Olaya - 20192020136
 
 ## 📌 Project Overview
 Havenly is a web-based property management and booking system inspired by Airbnb.  

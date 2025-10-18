@@ -22,8 +22,6 @@ identifying the main stakeholders, value propositions, and business logic.
 - **Customer Segments:** guests, hosts, property managers, administrators.  
 - **Revenue Streams:** booking commissions, service fees, featured listings.  
 
-📄 See: `BusinessModelCanvas.pdf`
-
 ---
 
 ## 2️⃣ Requirements Documentation
@@ -35,8 +33,6 @@ the system’s scope and performance expectations.
 - **Non-Functional Requirements (NFR):** quality attributes, including  
   performance, scalability, availability, security, and usability.  
 
-📄 See: `Requirements.pdf`
-
 ---
 
 ## 3️⃣ User Stories
@@ -47,8 +43,6 @@ They are written in the format:
 
 Each story will include **acceptance criteria** to ensure clarity.  
 
-📄 See: `UserStories.pdf`
-
 ---
 
 ## 4️⃣ Initial Database Architecture
@@ -57,5 +51,4 @@ This section proposes a **high-level database architecture**, including:
 - A description of how data will flow through the system.  
 - Considerations for performance, indexing, and consistency.  
 
-📄 See: `ERDiagram.pdf`
 

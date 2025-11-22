@@ -21,7 +21,7 @@ book stays securely, and leave reviews.
 - [Documentation](./docs)
   - [Workshop 1](./docs/Workshop-1/workshop1.pdf)
   - [Workshop 2](./docs/Workshop-2/workshop2.pdf)
-  - [Workshop 3](./docs/Workshop-3/workshop3.pdf)
+  - [Workshop 3](./docs/workshop-3/workshop3.pdf)
 
 ## 🗂️ Repository Structure
 

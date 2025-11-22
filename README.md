@@ -27,12 +27,13 @@ book stays securely, and leave reviews.
 ```
 Havenly/
 │
-├── src/                    # Source code for the project
-├── docs/                   # WorkShops and other documents
-│   └── Workshop-1/
-│       ├── WorkShop-1.pdf
-│       ├── README.md
-├── README.md               # Full documentation and instructions
-├── .gitignore              # Files/folders excluded from Git tracking
-└── LICENSE                 
-```
+├── src/                    # Source code for the project
+├── docs/                   # WorkShops and other documents
+│   ├── Workshop-1/         # Files for Workshop 1
+│   │   ├── WorkShop-1.pdf
+│   │   └── README.md
+│   ├── Workshop-2/         # Files for Workshop 2
+│   └── Workshop-3/         # Files for Workshop 3
+├── README.md               # Full documentation and instructions
+├── .gitignore              # Files/folders excluded from Git tracking
+└── LICENSE

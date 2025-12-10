@@ -392,58 +392,14 @@ CREATE INDEX idx_payment_booking ON payment(booking_id, region_id);
 CREATE INDEX idx_payment_status ON payment(status);
 
 -- ============================================================================
--- PARTE 13: TRIGGERS PARA updated_at
+-- PARTE 13: NOTA SOBRE TRIGGERS
 -- ============================================================================
-
-CREATE OR REPLACE FUNCTION public.set_updated_at()
-RETURNS trigger AS $$
-BEGIN
-    NEW.updated_at := CURRENT_TIMESTAMP;
-    RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Triggers para tablas de referencia
-CREATE TRIGGER trg_set_updated_at_property_type
-BEFORE UPDATE ON property_type
-FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
-
-CREATE TRIGGER trg_set_updated_at_amenity
-BEFORE UPDATE ON amenity
-FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
-
--- Triggers para tablas distribuidas
-CREATE TRIGGER trg_set_updated_at_user
-BEFORE UPDATE ON "user"
-FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
-
-CREATE TRIGGER trg_set_updated_at_property
-BEFORE UPDATE ON property
-FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
-
-CREATE TRIGGER trg_set_updated_at_property_photo
-BEFORE UPDATE ON property_photo
-FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
-
-CREATE TRIGGER trg_set_updated_at_available_date
-BEFORE UPDATE ON available_date
-FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
-
-CREATE TRIGGER trg_set_updated_at_booking
-BEFORE UPDATE ON booking
-FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
-
-CREATE TRIGGER trg_set_updated_at_payment
-BEFORE UPDATE ON payment
-FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
-
-CREATE TRIGGER trg_set_updated_at_review
-BEFORE UPDATE ON review
-FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
-
-CREATE TRIGGER trg_set_updated_at_review_response
-BEFORE UPDATE ON review_response
-FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+-- IMPORTANTE: Citus NO soporta triggers en tablas distribuidas ni en 
+-- reference tables. El campo updated_at debe manejarse desde la aplicación.
+-- 
+-- En SQLAlchemy, usar:
+--   updated_at = Column(DateTime, default=func.now(), onupdate=func.now())
+-- ============================================================================
 
 -- ============================================================================
 -- PARTE 14: DATOS INICIALES DE REGIONES DE SUDAMÉRICA

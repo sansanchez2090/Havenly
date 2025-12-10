@@ -1,0 +1,325 @@
+# ==============================================================================
+# DOCKER COMPOSE - CITUS CLUSTER PARA HEAVENLY
+# ==============================================================================
+# Arquitectura:
+# - 1 Coordinator (nodo principal)
+# - 6 Workers (uno por región principal de Sudamérica)
+#
+# USO:
+#   1. Copia .env.docker.example a .env.docker
+#   2. Configura tus credenciales en .env.docker
+#   3. Ejecuta: docker compose up -d
+# ==============================================================================
+
+services:
+  # ==========================================================================
+  # COORDINATOR - Nodo principal de Citus
+  # ==========================================================================
+  citus_coordinator:
+    image: citusdata/citus:12.1
+    container_name: citus_coordinator
+    ports:
+      - "5434:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    env_file:
+      - .env.docker
+    volumes:
+      - citus_coordinator_data:/var/lib/postgresql/data
+      - ./db_citus.sql:/docker-entrypoint-initdb.d/01_schema.sql:ro
+      - ./scripts/citus_setup.sql:/docker-entrypoint-initdb.d/02_citus_setup.sql:ro
+      - ./scripts/pg_hba.conf:/var/lib/postgresql/pg_hba.conf:ro
+    networks:
+      - citus_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: ["postgres", "-c", "hba_file=/var/lib/postgresql/pg_hba.conf"]
+    labels:
+      - "com.heavenly.role=coordinator"
+      - "com.heavenly.region=all"
+
+  # ==========================================================================
+  # WORKERS - Un worker por región de Sudamérica
+  # ==========================================================================
+  
+  # Worker Argentina (region_id = 1)
+  citus_worker_argentina:
+    image: citusdata/citus:12.1
+    container_name: citus_worker_argentina
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    env_file:
+      - .env.docker
+    volumes:
+      - citus_worker_argentina_data:/var/lib/postgresql/data
+      - ./scripts/pg_hba.conf:/var/lib/postgresql/pg_hba.conf:ro
+    networks:
+      - citus_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: ["postgres", "-c", "hba_file=/var/lib/postgresql/pg_hba.conf"]
+    labels:
+      - "com.heavenly.role=worker"
+      - "com.heavenly.region=argentina"
+      - "com.heavenly.region_id=1"
+    depends_on:
+      citus_coordinator:
+        condition: service_healthy
+
+  # Worker Brasil (region_id = 2)
+  citus_worker_brasil:
+    image: citusdata/citus:12.1
+    container_name: citus_worker_brasil
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    env_file:
+      - .env.docker
+    volumes:
+      - citus_worker_brasil_data:/var/lib/postgresql/data
+      - ./scripts/pg_hba.conf:/var/lib/postgresql/pg_hba.conf:ro
+    networks:
+      - citus_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: ["postgres", "-c", "hba_file=/var/lib/postgresql/pg_hba.conf"]
+    labels:
+      - "com.heavenly.role=worker"
+      - "com.heavenly.region=brasil"
+      - "com.heavenly.region_id=2"
+    depends_on:
+      citus_coordinator:
+        condition: service_healthy
+
+  # Worker Colombia (region_id = 3)
+  citus_worker_colombia:
+    image: citusdata/citus:12.1
+    container_name: citus_worker_colombia
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    env_file:
+      - .env.docker
+    volumes:
+      - citus_worker_colombia_data:/var/lib/postgresql/data
+      - ./scripts/pg_hba.conf:/var/lib/postgresql/pg_hba.conf:ro
+    networks:
+      - citus_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: ["postgres", "-c", "hba_file=/var/lib/postgresql/pg_hba.conf"]
+    labels:
+      - "com.heavenly.role=worker"
+      - "com.heavenly.region=colombia"
+      - "com.heavenly.region_id=3"
+    depends_on:
+      citus_coordinator:
+        condition: service_healthy
+
+  # Worker Chile (region_id = 4)
+  citus_worker_chile:
+    image: citusdata/citus:12.1
+    container_name: citus_worker_chile
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    env_file:
+      - .env.docker
+    volumes:
+      - citus_worker_chile_data:/var/lib/postgresql/data
+      - ./scripts/pg_hba.conf:/var/lib/postgresql/pg_hba.conf:ro
+    networks:
+      - citus_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: ["postgres", "-c", "hba_file=/var/lib/postgresql/pg_hba.conf"]
+    labels:
+      - "com.heavenly.role=worker"
+      - "com.heavenly.region=chile"
+      - "com.heavenly.region_id=4"
+    depends_on:
+      citus_coordinator:
+        condition: service_healthy
+
+  # Worker Perú (region_id = 5)
+  citus_worker_peru:
+    image: citusdata/citus:12.1
+    container_name: citus_worker_peru
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    env_file:
+      - .env.docker
+    volumes:
+      - citus_worker_peru_data:/var/lib/postgresql/data
+      - ./scripts/pg_hba.conf:/var/lib/postgresql/pg_hba.conf:ro
+    networks:
+      - citus_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: ["postgres", "-c", "hba_file=/var/lib/postgresql/pg_hba.conf"]
+    labels:
+      - "com.heavenly.role=worker"
+      - "com.heavenly.region=peru"
+      - "com.heavenly.region_id=5"
+    depends_on:
+      citus_coordinator:
+        condition: service_healthy
+
+  # Worker Ecuador (region_id = 6)
+  citus_worker_ecuador:
+    image: citusdata/citus:12.1
+    container_name: citus_worker_ecuador
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    env_file:
+      - .env.docker
+    volumes:
+      - citus_worker_ecuador_data:/var/lib/postgresql/data
+      - ./scripts/pg_hba.conf:/var/lib/postgresql/pg_hba.conf:ro
+    networks:
+      - citus_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command: ["postgres", "-c", "hba_file=/var/lib/postgresql/pg_hba.conf"]
+    labels:
+      - "com.heavenly.role=worker"
+      - "com.heavenly.region=ecuador"
+      - "com.heavenly.region_id=6"
+    depends_on:
+      citus_coordinator:
+        condition: service_healthy
+
+  # ==========================================================================
+  # REDIS - Cache
+  # ==========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: heavenly_redis
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - citus_network
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================================================
+  # CITUS MANAGER - Script para registrar workers
+  # ==========================================================================
+  citus_manager:
+    image: citusdata/citus:12.1
+    container_name: citus_manager
+    networks:
+      - citus_network
+    depends_on:
+      citus_coordinator:
+        condition: service_healthy
+      citus_worker_argentina:
+        condition: service_healthy
+      citus_worker_brasil:
+        condition: service_healthy
+      citus_worker_colombia:
+        condition: service_healthy
+      citus_worker_chile:
+        condition: service_healthy
+      citus_worker_peru:
+        condition: service_healthy
+      citus_worker_ecuador:
+        condition: service_healthy
+    env_file:
+      - .env.docker
+    entrypoint: >
+      /bin/bash -c "
+        echo '=== CITUS CLUSTER SETUP ===';
+        echo 'Esperando que todos los nodos estén listos...';
+        sleep 15;
+        
+        echo 'Configurando hostname del coordinator...';
+        PGPASSWORD=$$POSTGRES_PASSWORD psql -h citus_coordinator -U $$POSTGRES_USER -d $$POSTGRES_DB -c \"SELECT citus_set_coordinator_host('citus_coordinator', 5432);\";
+        
+        echo 'Registrando workers en el coordinator...';
+        PGPASSWORD=$$POSTGRES_PASSWORD psql -h citus_coordinator -U $$POSTGRES_USER -d $$POSTGRES_DB -c \"SELECT citus_add_node('citus_worker_argentina', 5432);\";
+        PGPASSWORD=$$POSTGRES_PASSWORD psql -h citus_coordinator -U $$POSTGRES_USER -d $$POSTGRES_DB -c \"SELECT citus_add_node('citus_worker_brasil', 5432);\";
+        PGPASSWORD=$$POSTGRES_PASSWORD psql -h citus_coordinator -U $$POSTGRES_USER -d $$POSTGRES_DB -c \"SELECT citus_add_node('citus_worker_colombia', 5432);\";
+        PGPASSWORD=$$POSTGRES_PASSWORD psql -h citus_coordinator -U $$POSTGRES_USER -d $$POSTGRES_DB -c \"SELECT citus_add_node('citus_worker_chile', 5432);\";
+        PGPASSWORD=$$POSTGRES_PASSWORD psql -h citus_coordinator -U $$POSTGRES_USER -d $$POSTGRES_DB -c \"SELECT citus_add_node('citus_worker_peru', 5432);\";
+        PGPASSWORD=$$POSTGRES_PASSWORD psql -h citus_coordinator -U $$POSTGRES_USER -d $$POSTGRES_DB -c \"SELECT citus_add_node('citus_worker_ecuador', 5432);\";
+        
+        echo 'Workers registrados exitosamente!';
+        echo 'Verificando nodos activos...';
+        PGPASSWORD=$$POSTGRES_PASSWORD psql -h citus_coordinator -U $$POSTGRES_USER -d $$POSTGRES_DB -c 'SELECT * FROM citus_get_active_worker_nodes();';
+        echo '=== CLUSTER CITUS LISTO ===';
+      "
+
+# ==============================================================================
+# VOLUMES
+# ==============================================================================
+volumes:
+  citus_coordinator_data:
+    name: heavenly_citus_coordinator
+  citus_worker_argentina_data:
+    name: heavenly_citus_worker_argentina
+  citus_worker_brasil_data:
+    name: heavenly_citus_worker_brasil
+  citus_worker_colombia_data:
+    name: heavenly_citus_worker_colombia
+  citus_worker_chile_data:
+    name: heavenly_citus_worker_chile
+  citus_worker_peru_data:
+    name: heavenly_citus_worker_peru
+  citus_worker_ecuador_data:
+    name: heavenly_citus_worker_ecuador
+  redis_data:
+    name: heavenly_redis
+
+# ==============================================================================
+# NETWORKS
+# ==============================================================================
+networks:
+  citus_network:
+    driver: bridge
+    name: heavenly_citus_network

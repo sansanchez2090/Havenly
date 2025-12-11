@@ -38,7 +38,7 @@ class UserUpdate(BaseModel):
     
     model_config = ConfigDict(from_attributes=True)
 
-class UserInDB(UserBase):
+class User(UserBase):
     id: int
     photo_url: str
     status: UserStatus

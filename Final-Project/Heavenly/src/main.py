@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 
 from core.config import settings
 from repositories.database import engine
-from routers import users, locations, auth, properties
+from routers import users, locations, auth, properties, bookings, payments
 import models
 
 
@@ -30,15 +30,12 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# NOTA: Las tablas ya están creadas por el script db_citus.sql
-# No usar models.Base.metadata.create_all() con Citus
-
-# Registrar routers
 app.include_router(users.router)
 app.include_router(locations.router)
 app.include_router(auth.router)
-
 app.include_router(properties.router)
+app.include_router(bookings.router)
+app.include_router(payments.router)
 
 
 @app.get("/health")

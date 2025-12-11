@@ -1,7 +1,6 @@
-# schemas/availability.py
 from datetime import date
 from typing import List, Optional
-from pydantic import BaseModel, Field, ConfigDict, validator
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class AvailableDateBase(BaseModel):
@@ -9,11 +8,7 @@ class AvailableDateBase(BaseModel):
     end_date: date
     is_available: bool = Field(default=True)
     
-    @validator('end_date')
-    def validate_dates(cls, end_date, values):
-        if 'start_date' in values and end_date < values['start_date']:
-            raise ValueError('end_date must be after start_date')
-        return end_date
+
     
     model_config = ConfigDict(from_attributes=True)
 
@@ -36,12 +31,6 @@ class AvailableDateUpdate(BaseModel):
     start_date: Optional[date] = None
     end_date: Optional[date] = None
     
-    @validator('end_date')
-    def validate_dates(cls, end_date, values):
-        if 'start_date' in values and end_date and values['start_date']:
-            if end_date < values['start_date']:
-                raise ValueError('end_date must be after start_date')
-        return end_date
 
 
 class AvailableDateRes(AvailableDateBase):

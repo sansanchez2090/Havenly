@@ -37,9 +37,7 @@ def list_properties(
     sort_by: str = Query("created_at", regex="^(price|rating|created_at)$"),
     sort_order: str = Query("desc", regex="^(asc|desc)$")
 ):
-    """
-    Get properties with filtering and pagination
-    """
+    
     try:
         return PropertyDiscoveryService.list_properties(
             db=db,
@@ -71,9 +69,7 @@ def list_properties(
 
 @router.get("/{property_id}", response_model=PropertyRes, status_code=status.HTTP_200_OK)
 def get_property(property_id: int, db: Session = Depends(get_db)):
-    """
-    Get property by ID
-    """
+  
     property = PropertyDiscoveryService.get_property(db, property_id)
     
     if not property:
@@ -90,9 +86,7 @@ def create_property(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
-    """
-    Create a new property listing
-    """
+   
     property = PropertyService.create_property(
         db=db,
         property_data=property_data,
@@ -108,9 +102,7 @@ def get_my_properties(
     skip: int = Query(0, ge=0),
     limit: int = Query(100, ge=1, le=100)
 ):
-    """
-    Get all properties owned by current user
-    """
+   
     properties = PropertyService.get_user_properties(
         db=db,
         user_id=current_user["id"],
@@ -155,9 +147,7 @@ def delete_property(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
-    """
-    Delete property listing (soft delete)
-    """
+  
     success = PropertyService.delete_property(
         db=db,
         property_id=property_id,

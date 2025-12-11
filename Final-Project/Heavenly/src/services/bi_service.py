@@ -3,18 +3,14 @@ import psycopg2
 from dotenv import load_dotenv
 from typing import Optional
 
-# Cargar variables de entorno del archivo .env
 load_dotenv()
 
-# --- CONFIGURACIÓN DE RUTAS ---
-# Determina la ruta absoluta del directorio 'scripts' desde la ubicación actual (src/services)
+
 BASE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..')
 SQL_DIR = os.path.join(BASE_DIR, 'scripts')
 
-# Archivo que contiene la lógica ELT y la población de dim_date
 POPULATE_SQL = os.path.join(SQL_DIR, 'dw_populate.sql')
 
-# --- CONFIGURACIÓN DE CONEXIÓN A DB ---
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5434") 
 DB_NAME = os.getenv("DB_NAME", "heavenly")

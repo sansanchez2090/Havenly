@@ -60,9 +60,7 @@ def get_property_availability(
     end_date: Optional[date] = Query(None),
     is_available: Optional[bool] = Query(None)
 ):
-    """
-    Get availability calendar for a property
-    """
+   
     return AvailabilityService.get_property_availability(
         db=db,
         property_id=property_id,
@@ -109,9 +107,7 @@ def delete_availability(
     db: Session = Depends(get_db),
     current_user: dict = Depends(get_current_user)
 ):
-    """
-    Delete availability date range
-    """
+  
     success = AvailabilityService.delete_availability(
         db=db,
         availability_id=availability_id,

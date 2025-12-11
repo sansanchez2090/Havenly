@@ -1,22 +1,43 @@
-from fastapi import Depends, HTTPException
-from fastapi.security import HTTPBearer
-import jwt 
-from jwt.exceptions import PyJWTError
+from fastapi import Depends, HTTPException, status
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from sqlalchemy.orm import Session
+from jose import JWTError, jwt
+from datetime import datetime
+from dotenv import load_dotenv
+import os
+from repositories.database import get_db
+from models.user import User
 
 security = HTTPBearer()
 
-def get_current_user(credentials = Depends(security)) -> dict:
-    token = credentials.credentials
-    
+
+def get_current_user(
+    credentials: HTTPAuthorizationCredentials = Depends(security),
+    db: Session = Depends(get_db)
+) -> User:
+   
     try:
-        # 1. Decodificar token con tu clave secreta
-        payload = jwt.decode(token, "SECRET_KEY", algorithms=["HS256"])
+        token = credentials.credentials
+        payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=[os.getenv('ALGORITHM')])
         
-        # 2. Extraer datos del usuario del payload
-        user_id = payload.get("sub")  # o el campo que uses
+        user_id: int = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication credentials"
+            )
         
-        # 3. Retornar diccionario con datos usuario
-        return {"id": user_id, "email": payload.get("email")}
-    
-    except PyJWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
+        user = db.query(User).filter(User.id == user_id).first()
+        if user is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="User not found"
+            )
+        
+        return user
+        
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token"
+        )

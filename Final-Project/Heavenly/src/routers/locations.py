@@ -12,6 +12,5 @@ router = APIRouter(
 
 @router.get("/", response_model=List[City], status_code=status.HTTP_200_OK)
 def list_cities(db: Session = Depends(get_db)):
-    """Obtener todas las ciudades"""
     return LocationService.list_cities(db) 
 

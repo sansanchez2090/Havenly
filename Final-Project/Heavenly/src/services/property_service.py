@@ -22,11 +22,8 @@ class PropertyService:
         property_data: PropertyCreate, 
         user_id: int
     ) -> Property:
-        """
-        Create a new property listing
-        """
+      
         try:
-            # Create property
             db_property = Property(
                 address=property_data.address,
                 description=property_data.description,
@@ -45,14 +42,12 @@ class PropertyService:
             db.add(db_property)
             db.flush()  # Get property ID
             
-            # Add amenities
             if property_data.amenities:
                 amenities = db.query(Amenity).filter(
                     Amenity.id.in_(property_data.amenities)
                 ).all()
                 db_property.amenities.extend(amenities)
             
-            # Add photos
             if property_data.photo_urls:
                 for idx, url in enumerate(property_data.photo_urls):
                     photo = PropertyPhoto(
@@ -88,10 +83,7 @@ class PropertyService:
         user_id: int,
         update_data: PropertyUpdate
     ) -> Optional[Property]:
-        """
-        Update property listing (owner only)
-        """
-        # Get property with distribution key
+       
         property = db.query(Property).filter(
             Property.id == property_id,
             Property.region_id == region_id,
@@ -102,13 +94,11 @@ class PropertyService:
             return None
         
         try:
-            # Update basic fields
             update_dict = update_data.model_dump(exclude_unset=True, exclude={"amenities", "photo_urls"})
             
             for field, value in update_dict.items():
                 setattr(property, field, value)
             
-            # Update amenities if provided
             if update_data.amenities is not None:
                 property.amenities.clear()
                 amenities = db.query(Amenity).filter(
@@ -116,15 +106,12 @@ class PropertyService:
                 ).all()
                 property.amenities.extend(amenities)
             
-            # Update photos if provided
             if update_data.photo_urls is not None:
-                # Delete existing photos
                 db.query(PropertyPhoto).filter(
                     PropertyPhoto.property_id == property_id,
                     PropertyPhoto.region_id == region_id
                 ).delete()
                 
-                # Add new photos
                 for idx, url in enumerate(update_data.photo_urls):
                     photo = PropertyPhoto(
                         image_url=url,
@@ -153,9 +140,7 @@ class PropertyService:
         region_id: int,
         user_id: int
     ) -> bool:
-        """
-        Soft delete property listing (set is_active=False)
-        """
+      
         property = db.query(Property).filter(
             Property.id == property_id,
             Property.region_id == region_id,
@@ -177,9 +162,7 @@ class PropertyService:
         skip: int = 0,
         limit: int = 100
     ) -> List[Property]:
-        """
-        Get all properties owned by a user
-        """
+      
         return db.query(Property)\
             .filter(Property.user_id == user_id)\
             .order_by(Property.created_at.desc())\
